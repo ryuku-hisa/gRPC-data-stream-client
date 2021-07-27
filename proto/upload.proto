@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+option go_package = "./";
+
+service UploadHandler {
+  rpc Upload(stream UploadRequest) returns(UploadResponse) {}
+}
+
+message UploadRequest {
+  bytes VideoData = 1;
+}
+
+message UploadResponse {
+  string UploadStatus = 1;
+}

@@ -18,7 +18,8 @@ func main() {
 	conn, _ := grpc.Dial("address", grpc.WithInsecure())
 
 	defer conn.Close()
-	uploadhalder := pb.NewUploadHandlerClient(conn)
+	uploadhalder := pb.upload_grpc.NewUploadHandlerClient(conn)
+	
 	stream, err := uploadhalder.Upload(context.Background())
 	err = Upload(stream)
 	if err != nil {
@@ -26,9 +27,12 @@ func main() {
 	}
 }
 
-func Upload(stream pb.UploadHandler_UploadClient) error {
+func Upload(stream pb.upload_grpc.UploadHandler_UploadClient) error {
+	
 	file, _ := os.Open("./sample.mp4")
+
 	defer file.Close()
+
 	buf := make([]byte, 1024)
 
 	for {

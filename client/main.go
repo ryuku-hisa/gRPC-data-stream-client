@@ -3,24 +3,28 @@ package main
 import (
 	"context"
 	"fmt"
-	"io"
+	"log"
 	"os"
 
-	pb "github.com/Ryuku-Hisa/gRPC-data-stream-client/proto"
+	pb "github.com/ryuku-hisa/gRPC-data-stream-client/proto"
 	"google.golang.org/grpc"
 )
 
 const (
-	address = "192.168.10.32"
+	address = "192.168.10.32:50051"
 )
 
 func main() {
-	conn, _ := grpc.Dial(address, grpc.WithInsecure())
-
+	conn, err := grpc.Dial(address, grpc.WithInsecure())
+	if err != nil {
+		log.Fatalf("could not connect: %v", err)
+	}
 	defer conn.Close()
 	uploadhalder := pb.NewUploadHandlerClient(conn)
-
 	stream, err := uploadhalder.Upload(context.Background())
+	if err != nil {
+		fmt.Println(err)
+	}
 	err = Upload(stream)
 	if err != nil {
 		fmt.Println(err)
@@ -28,22 +32,34 @@ func main() {
 }
 
 func Upload(stream pb.UploadHandler_UploadClient) error {
+	fp, err := os.Open("./sample.mp4")
+	if err != nil {
+		return err
+	}
+	fileinfo, err := fp.Stat()
+	if err != nil {
+		return err
+	}
 
-	file, _ := os.Open("./sample.mp4")
-
-	defer file.Close()
-
-	buf := make([]byte, 1024)
+	defer fp.Close()
+	buf := make([]byte, fileinfo.Size())
 
 	for {
-		_, err := file.Read(buf)
-		if err == io.EOF {
+		n, err := fp.Read(buf)
+		if n == 0 {
 			break
 		}
 		if err != nil {
 			return err
 		}
-		stream.Send(&pb.UploadRequest{VideoData: buf})
+
+		err = stream.Send(&pb.UploadRequest{
+			VideoData: buf,
+		})
+		if err != nil {
+			return err
+		}
+
 	}
 
 	resp, err := stream.CloseAndRecv()

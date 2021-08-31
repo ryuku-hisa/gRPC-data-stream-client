@@ -36,13 +36,13 @@ func Upload(stream pb.UploadHandler_UploadClient) error {
 	if err != nil {
 		return err
 	}
-	fileinfo, err := fp.Stat()
-	if err != nil {
-		return err
-	}
-
 	defer fp.Close()
-	buf := make([]byte, fileinfo.Size())
+
+	//fileinfo, err := fp.Stat()
+	// if err != nil {
+	// 	return err
+	// }
+	buf := make([]byte, 1024)
 
 	for {
 		n, err := fp.Read(buf)

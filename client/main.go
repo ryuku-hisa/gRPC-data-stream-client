@@ -11,10 +11,14 @@ import (
 )
 
 const (
-	address = "192.168.10.32:50051"
+	address = "192.168.15.32:50051"
 )
 
 func main() {
+  if len(os.Args) < 2 {
+    fmt.Println("ERROR: Specify the filename")
+    os.Exit(1)
+  }
 	conn, err := grpc.Dial(address, grpc.WithInsecure())
 	if err != nil {
 		log.Fatalf("could not connect: %v", err)
@@ -32,7 +36,9 @@ func main() {
 }
 
 func Upload(stream pb.UploadHandler_UploadClient) error {
-	fp, err := os.Open("./sample.mp4")
+  size := os.Args[1]
+  filename := size + "Kbytes.mp4"
+  fp, err := os.Open(filename)
 	if err != nil {
 		return err
 	}
@@ -42,7 +48,7 @@ func Upload(stream pb.UploadHandler_UploadClient) error {
 	// if err != nil {
 	// 	return err
 	// }
-	buf := make([]byte, 1024)
+	buf := make([]byte, 5096)
 
 	for {
 		n, err := fp.Read(buf)

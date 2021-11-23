@@ -1,0 +1,103 @@
+Ip:
+    Forwarding: 2
+    256513879 total packets received
+    0 forwarded
+    0 incoming packets discarded
+    233005608 incoming packets delivered
+    2616694 requests sent out
+    1198 outgoing packets dropped
+    20 dropped because of missing route
+    25 fragments dropped after timeout
+    24099173 reassemblies required
+    590902 packets reassembled ok
+    25 packet reassemblies failed
+Icmp:
+    509052 ICMP messages received
+    8791 input ICMP message failed
+    ICMP input histogram:
+        destination unreachable: 509047
+        echo replies: 5
+    16564 ICMP messages sent
+    0 ICMP messages failed
+    ICMP output histogram:
+        destination unreachable: 16554
+        time exceeded: 5
+        echo requests: 5
+IcmpMsg:
+        InType0: 5
+        InType3: 509047
+        OutType3: 16554
+        OutType8: 5
+        OutType11: 5
+Tcp:
+    72 active connection openings
+    35 passive connection openings
+    7 failed connection attempts
+    27 connection resets received
+    1 connections established
+    2656057 segments received
+    8209864 segments sent out
+    185 segments retransmitted
+    0 bad segments received
+    329 resets sent
+Udp:
+    790 packets received
+    229836836 packets to unknown port received
+    0 packet receive errors
+    812748 packets sent
+    0 receive buffer errors
+    0 send buffer errors
+    IgnoredMulti: 2873
+UdpLite:
+TcpExt:
+    25 ICMP packets dropped because they were out-of-window
+    39 TCP sockets finished time wait in fast timer
+    175 delayed acks sent
+    1 delayed acks further delayed because of locked socket
+    Quick ack mode was activated 34 times
+    591453 packet headers predicted
+    416117 acknowledgments not containing data payload received
+    1611030 predicted acknowledgments
+    TCPSackRecovery: 37
+    Detected reordering 2896 times using SACK
+    Detected reordering 27 times using time stamp
+    20 congestion windows partially recovered using Hoe heuristic
+    TCPLostRetransmit: 9
+    177 fast retransmits
+    3 retransmits in slow start
+    TCPTimeouts: 3
+    TCPLossProbes: 3
+    TCPBacklogCoalesce: 16498
+    TCPDSACKOldSent: 34
+    TCPDSACKRecv: 28
+    10 connections reset due to early user close
+    6 connections aborted due to timeout
+    TCPDSACKIgnoredNoUndo: 18
+    TCPSackShifted: 113
+    TCPSackMerged: 110
+    TCPSackShiftFallback: 1526
+    TCPBacklogDrop: 13
+    TCPRcvCoalesce: 46563
+    TCPOFOQueue: 1161
+    TCPAutoCorking: 18842
+    TCPWantZeroWindowAdv: 111
+    TCPOrigDataSent: 8063282
+    TCPHystartTrainDetect: 46
+    TCPHystartTrainCwnd: 975
+    TCPKeepAlive: 66
+    TCPDelivered: 8062063
+    TCPAckCompressed: 807
+    TcpTimeoutRehash: 3
+    TcpDuplicateDataRehash: 2
+    TCPDSACKRecvSegs: 28
+IpExt:
+    InMcastPkts: 451
+    OutMcastPkts: 20
+    InBcastPkts: 2873
+    InOctets: 278720283316
+    OutOctets: 11692970105
+    InMcastOctets: 114921
+    OutMcastOctets: 3424
+    InBcastOctets: 691412
+    InNoECTPkts: 256513626
+    InECT0Pkts: 253

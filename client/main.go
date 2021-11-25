@@ -36,8 +36,7 @@ func main() {
 }
 
 func Upload(stream pb.UploadHandler_UploadClient) error {
-  size := os.Args[1]
-  filename := size + "Kbytes.mp4"
+  filename := os.Args[1]
   fp, err := os.Open(filename)
 	if err != nil {
 		return err
@@ -67,11 +66,11 @@ func Upload(stream pb.UploadHandler_UploadClient) error {
 		}
 
 	}
-
-	resp, err := stream.CloseAndRecv()
+//_ was resp//
+	_, err = stream.CloseAndRecv()
 	if err != nil {
 		return err
 	}
-	fmt.Println(resp.UploadStatus)
+	//fmt.Println(resp.UploadStatus)
 	return nil
 }

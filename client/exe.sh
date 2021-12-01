@@ -70,15 +70,19 @@ expect ">> "
 send "exit\n"
 EOF
 
+
+    if [ $isattack = "onAttack" ]; then
 # start attacking
 expect <<EOF
 set timeout 10
 spawn ssh pi3@192.168.12.33 -p 12153
 expect ">> "
-send "nohup python3 ~/ldos_udp_pulse/main.py & \n"
+send "nohup sh -c 'sleep 0.5; python3 ~/ldos_udp_pulse/main.py;' & \n"
 expect ">> "
 send "exit\n"
 EOF
+    fi
+
 
 # start sending
     TIMEFORMAT='%3R'
@@ -105,6 +109,7 @@ send "exit\n"
 EOF
 
 
+    if [ $isattack = "onAttack" ]; then
 # stop attacking
 expect <<EOF
 set timeout 10
@@ -116,6 +121,7 @@ send "sleep 2\n"
 expect ">> "
 send "exit\n"
 EOF
+    fi
 
 #post-processing
 

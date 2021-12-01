@@ -47,7 +47,7 @@ func Upload(stream pb.UploadHandler_UploadClient) error {
 	// if err != nil {
 	// 	return err
 	// }
-	buf := make([]byte, 5096)
+	buf := make([]byte, 1024)
 
 	for {
 		n, err := fp.Read(buf)

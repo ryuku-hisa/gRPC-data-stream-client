@@ -40,6 +40,31 @@ if [ $4 -gt $5 ]; then
   exit 4
 fi
 
+
+# stop dumping
+expect <<EOF
+set timeout 10
+spawn ssh hisa@192.168.15.30 -p 12150
+expect ">> "
+send "echo hogehoge | sudo -S kill $\(ps aux | egrep '^tcpdump' | sed -e 's/ \[ \]*/ /g'| cut -d' ' -f2\) \n"
+expect ">> "
+send "exit\n"
+EOF
+
+
+# stop attacking
+expect <<EOF
+set timeout 10
+spawn ssh pi3@192.168.12.33 -p 12153
+expect ">> "
+send "echo hogehoge | sudo -S kill $\(ps aux | egrep ' python3' | sed -e 's/ \[ \]*/ /g'| cut -d' ' -f2\) \n"
+expect ">> "
+send "sleep 2\n"
+expect ">> "
+send "exit\n"
+EOF
+
+
 mintimes=$2
 maxtimes=$3
 size=$4
@@ -91,7 +116,7 @@ EOF
     (time ./client data.mp4) > ./time/out.txt 2>&1
     echo DONE
     exe_time=`cat ./time/out.txt`
-    echo "$size,$t,$exe_time,$isattack" >> ./time/time.txt
+    echo "$size,$t,$exe_time,$isattack" >> ./time/time.csv
     echo
     printf %s "(size,time) = "
     printf %s "($size Mbytes, $exe_time sec)"
@@ -109,8 +134,8 @@ send "exit\n"
 EOF
 
 
-    if [ $isattack = "onAttack" ]; then
 # stop attacking
+    if [ $isattack = "onAttack" ]; then
 expect <<EOF
 set timeout 10
 spawn ssh pi3@192.168.12.33 -p 12153

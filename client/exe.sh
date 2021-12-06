@@ -102,7 +102,7 @@ expect <<EOF
 set timeout 10
 spawn ssh pi3@192.168.12.33 -p 12153
 expect ">> "
-send "nohup sh -c 'sleep 0.5; python3 ~/ldos_udp_pulse/main.py;' & \n"
+send "nohup sh -c 'sleep 0.3; python3 ~/ldos_udp_pulse/main.py;' & \n"
 expect ">> "
 send "exit\n"
 EOF

@@ -4,7 +4,7 @@
 # functions
 #======================================================================
 function usage() {
-  echo "Usage: ./exe.sh <isAttack> <indexStr> <indexEnd> <startsize> <endsize> <increment>"
+  echo "Usage: ./exe.sh <isAttack> <indexStr> <indexEnd> <startsize> <endsize> <increment> <difference>"
   return
 }
 
@@ -12,7 +12,7 @@ function usage() {
 # main
 #======================================================================
 
-if [ $# -ne 6 ]; then
+if [ $# -ne 7 ]; then
   echo "ERROR: sepcify the args"
   usage
   exit 1
@@ -70,6 +70,22 @@ maxtimes=$3
 size=$4
 maxsize=$5
 inc=$6
+diff=$7
+
+if [ $(echo "$diff == 0.0" | bc) = 1 ]; then
+  plus=0.0
+  minus=0.0
+elif [  $(echo "$diff > 0.0" | bc) = 1  ]; then
+  plus=$diff
+  minus=0.0
+elif [  $(echo "$diff < 0.0" | bc) = 1  ]; then
+  plus=0.0
+  minus=$(echo "0.0 - $diff" | bc)
+else
+  echo "ERROR: unexpected argument <diff>"
+  usage
+  exit 5
+fi
 
 
 while [ $size -le $maxsize ]; do
@@ -97,14 +113,13 @@ while [ $size -le $maxsize ]; do
 
 # start dumping (only 15)
 expect <<EOF
-# set timeout 10
-# spawn ssh hisa@192.168.15.30 -p 12150
- expect ">> "
-# send "echo 'hogehoge' | nohup sudo -S tcpdump -i eno1 src host 192.168.15.32 and port 50051 or dst host 192.168.15.32 and port 50051 -w ~/logs/${size}MB_${t}_${isattack}_15.pcap > /dev/null 2>&1 & \n"
-# expect ">> "
-# send "exit\n"
-# EOF
-
+set timeout 10
+spawn ssh hisa@192.168.15.30 -p 12150
+expect ">> "
+send "echo 'hogehoge' | nohup sudo -S tcpdump -i eno1 src host 192.168.15.32 and port 50051 or dst host 192.168.15.32 and port 50051 -w ~/logs/${size}MB_${t}_${diff}_${isattack}_15.pcap > /dev/null 2>&1 & \n"
+expect ">> "
+send "exit\n"
+EOF
 
 
     if [ $isattack = "onAttack" ]; then
@@ -113,7 +128,7 @@ expect <<EOF
 set timeout 10
 spawn ssh pi3@192.168.12.33 -p 12153
 expect ">> "
-send "nohup sh -c 'sleep 0.2; ./ldos_udp_pulse/attack; ' & \n"
+send "nohup sh -c 'sleep 0.5; sleep ${plus} ; ./ldos_udp_pulse/attack; ' & \n"
 expect ">> "
 send "exit\n"
 EOF
@@ -123,12 +138,13 @@ EOF
 # start sending
     TIMEFORMAT='%3R'
     echo 
-    sleep 1
+    sleep 0.5
+    sleep $minus
     echo Sending...
     (time ./client data.mp4) > ./time/out.txt 2>&1
     echo DONE
     exe_time=`cat ./time/out.txt`
-    echo "$size,$t,$exe_time,$isattack" >> ./time/time.csv
+    echo "$size,$t,$exe_time,$diff,$isattack" >> ./time/time.csv
     echo
     printf %s "(size,time) = "
     printf %s "($size Mbytes, $exe_time sec)"
